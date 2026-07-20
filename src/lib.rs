@@ -88,9 +88,8 @@ impl SmtpSession {
     }
 
     fn require_auth(&self) -> bool {
-        // For now, always require authentication after EHLO
-        // This can be made configurable later
-        true
+        // Respect the config setting for authentication requirement
+        self.config.auth.require_auth
     }
 
     fn can_add_recipient(&self) -> bool {

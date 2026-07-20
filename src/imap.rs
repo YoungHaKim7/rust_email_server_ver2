@@ -596,9 +596,14 @@ fn process_selected_state(
 
             // Parse FETCH command: FETCH <seq-set> <data-item>
             let seq_set = args[0];
-            let data_items = if args.len() > 1 { &args[1..] } else { &[] };
+            let raw_data_items = if args.len() > 1 { &args[1..] } else { &[] };
 
-            debug!("📥 FETCH request: sequence set={}, data items={:?}", seq_set, data_items);
+            // Strip parentheses from data items (e.g., "(BODY[])" -> "BODY[]")
+            let data_items: Vec<String> = raw_data_items.iter()
+                .map(|item| item.trim_matches('(').trim_matches(')').trim().to_string())
+                .collect();
+
+            debug!("📥 FETCH request: sequence set={}, raw items={:?}, processed={:?}", seq_set, raw_data_items, data_items);
 
             // Get stored emails to determine actual message counts
             let stored_emails = match storage.list_emails() {
@@ -651,7 +656,7 @@ fn process_selected_state(
 
                 // Process each data item requested
                 let mut fetch_data = Vec::new();
-                for item in data_items {
+                for item in &data_items {
                     let item_upper = item.to_uppercase();
 
                     match item_upper.as_str() {

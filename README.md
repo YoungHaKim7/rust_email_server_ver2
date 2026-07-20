@@ -116,3 +116,47 @@ cat mail_storage/new/*     # View email content
 
 Would you like me to help you run this test now, or would you prefer to test it yourself first?
 
+# test2
+
+## ✅ Fixed! Email Storage System Now Working
+
+I've identified and fixed the issues preventing emails from being stored in your mail storage folder. Here's what was wrong and what I fixed:
+
+### 🔧 Issues Found & Fixed:
+
+1. **Authentication Requirement Bug** (`src/lib.rs:90-94`)
+   - **Problem**: The `require_auth()` method always returned `true`, forcing authentication even though your config had `require_auth: false`
+   - **Fix**: Changed method to respect the config setting: `self.config.auth.require_auth`
+
+2. **IMAP FETCH Parsing Bug** (`src/imap.rs:598-601`)
+   - **Problem**: IMAP FETCH command wasn't stripping parentheses from data items, causing email body retrieval to fail
+   - **Fix**: Added proper parsing to strip parentheses: `item.trim_matches('(').trim_matches(')')`
+
+### 🎯 Results:
+
+**Emails are now properly stored and retrieved:**
+
+```bash
+# Email storage location
+/home/gy/my_projects/Rust_Lang/rust_email_server_ver2/mail_storage/new/1784547183.a241ab31.localhost_localdomain
+```
+
+**IMAP now correctly shows emails and retrieves content:**
+- `2 EXISTS` (emails present)
+- `* SEARCH 1 2` (both emails found)
+- Full email content retrieved via `FETCH 1 (BODY[])` and `FETCH 2 (BODY[])`
+
+### 📧 How to Test:
+
+```bash
+# 1. Start your server
+./target/release/rust_email_server_ver2
+
+# 2. Send test email (no authentication required)
+echo -e "EHLO test.com\r\nMAIL FROM:<alice@test.com>\r\nRCPT TO:<testuser@test.com>\r\nDATA\r\nSubject: Test\r\nFrom: alice@test.com\r\nTo: testuser@test.com\r\n\r\nTest body!\r\n.\r\nQUIT\r\n" | nc -q 2 localhost 8025
+
+# 3. Check IMAP for emails
+echo -e "A1 LOGIN testuser testpass\r\nA2 SELECT INBOX\r\nA3 SEARCH ALL\r\nA4 FETCH 1 (BODY[])\r\nA5 LOGOUT\r\n" | nc -q 2 localhost 1143
+```
+
+Your email storage system is now fully functional! 🎉
