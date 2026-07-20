@@ -9,6 +9,23 @@
 
 <hr />
 
+# 예전 서버 로그 기록 방법
+
+- https://github.com/YoungHaKim7/rust_email_server_ver2/commit/21fb93fe497021b9c53f33e654533fcc050aecc7#diff-b1a35a68f14e696205874893c07fd24fdb88882b47c23cc0e0c80a30c7d53759L690-L700
+
+```rs
+pub async fn start_smtp_server() -> Result<()> {
+    // Initialize logging
+    tracing_subscriber::fmt()
+        .with_env_filter("rust_email_server=debug,tokio=info")
+        .init();
+
+    // Load configuration
+    let config = ServerConfig::load()?;
+    info!("🔧 Loaded server configuration");
+```
+
+
 # ✅ Phase 4 Storage System Fixed!
 
   The duplicate impl MaildirStorage block has been merged into a single implementation block. The storage system is now complete
