@@ -1,1 +1,1 @@
-# -rust_email_server_ver2
+# rust_email_server_ver2
