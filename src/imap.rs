@@ -303,7 +303,7 @@ fn process_authenticated_state(
     cmd: &str,
     args: &[&str],
     _connection_manager: &ConnectionManager,
-    _storage: &Arc<MaildirStorage>,
+    storage: &Arc<MaildirStorage>,
 ) -> String {
     match cmd {
         "CAPABILITY" => {
@@ -322,36 +322,44 @@ fn process_authenticated_state(
             let mailbox_name = args[0].to_string();
             let read_only = cmd == "EXAMINE";
 
-            // For now, we'll just implement a basic SELECT with simulated mailbox data
-            // In a full implementation, this would check the actual mailbox storage
-
             info!("📁 User {} selecting mailbox '{}' (read-only: {})",
                   session.username.as_ref().unwrap_or(&"unknown".to_string()),
                   mailbox_name,
                   read_only);
 
+            // Get actual email counts from storage
+            let stored_emails = storage.list_emails()
+                .unwrap_or_else(|e| {
+                    warn!("⚠️  Failed to list emails from storage: {}", e);
+                    Vec::new()
+                });
+
+            let message_count = stored_emails.len();
+            let recent_count = stored_emails.iter().filter(|e| !e.is_read).count();
+            let uid_next = (message_count + 1) as u32;
+
             session.selected_mailbox = Some(MailboxSelection {
                 name: mailbox_name.clone(),
                 read_only,
-                message_count: 0, // Will be populated from actual storage
-                recent_count: 0,
+                message_count,
+                recent_count,
                 uid_validity: 1,
-                uid_next: 1,
+                uid_next,
                 flags: vec!["\\Answered".to_string(), "\\Flagged".to_string(), "\\Deleted".to_string(), "\\Seen".to_string(), "\\Draft".to_string()],
             });
 
             session.state = ImapState::Selected;
 
-            // Return standard SELECT response
+            // Return standard SELECT response with actual counts
             let response = format!(
                 "* FLAGS (\\Answered \\Flagged \\Deleted \\Seen \\Draft)\r\n\
                  * OK [PERMANENTFLAGS (\\Answered \\Flagged \\Deleted \\Seen \\Draft \\*)] Flags permitted\r\n\
-                 * 0 EXISTS\r\n\
-                 * 0 RECENT\r\n\
+                 * {} EXISTS\r\n\
+                 * {} RECENT\r\n\
                  * OK [UIDVALIDITY 1] UIDs valid\r\n\
-                 * OK [UIDNEXT 1] Predicted next UID\r\n\
+                 * OK [UIDNEXT {}] Predicted next UID\r\n\
                  {} OK {} completed\r\n",
-                tag, if read_only { "EXAMINE" } else { "SELECT" }
+                message_count, recent_count, uid_next, tag, if read_only { "EXAMINE" } else { "SELECT" }
             );
 
             response
@@ -395,7 +403,25 @@ fn process_authenticated_state(
             if args.len() < 2 {
                 return format!("{} BAD Missing STATUS arguments\r\n", tag);
             }
-            format!("* STATUS {} (MESSAGES 0 RECENT 0 UIDNEXT 1 UIDVALIDITY 1 UNSEEN 0)\r\n{} OK STATUS completed\r\n", args[0], tag)
+
+            let mailbox_name = args[0];
+
+            // Get actual statistics from storage
+            let stored_emails = match storage.list_emails() {
+                Ok(emails) => emails,
+                Err(e) => {
+                    warn!("⚠️  Failed to get email statistics: {}", e);
+                    return format!("* STATUS {} (MESSAGES 0 RECENT 0 UIDNEXT 1 UIDVALIDITY 1 UNSEEN 0)\r\n{} OK STATUS completed\r\n", mailbox_name, tag);
+                }
+            };
+
+            let messages = stored_emails.len();
+            let recent = stored_emails.iter().filter(|e| !e.is_read).count();
+            let unseen = recent; // For now, unseen = recent (new/ unread emails)
+            let uid_next = (messages + 1) as u32;
+
+            format!("* STATUS {} (MESSAGES {} RECENT {} UIDNEXT {} UIDVALIDITY 1 UNSEEN {})\r\n{} OK STATUS completed\r\n",
+                mailbox_name, messages, recent, uid_next, unseen, tag)
         }
         "LOGOUT" => {
             session.state = ImapState::Logout;
@@ -418,7 +444,7 @@ fn process_selected_state(
     cmd: &str,
     args: &[&str],
     _connection_manager: &ConnectionManager,
-    _storage: &Arc<MaildirStorage>,
+    storage: &Arc<MaildirStorage>,
 ) -> String {
     match cmd {
         "CAPABILITY" => {
@@ -442,32 +468,126 @@ fn process_selected_state(
                   session.username.as_ref().unwrap_or(&"unknown".to_string()),
                   mailbox_name);
 
+            // Get actual email counts from storage
+            let stored_emails = storage.list_emails()
+                .unwrap_or_else(|e| {
+                    warn!("⚠️  Failed to list emails from storage: {}", e);
+                    Vec::new()
+                });
+
+            let message_count = stored_emails.len();
+            let recent_count = stored_emails.iter().filter(|e| !e.is_read).count();
+            let uid_next = (message_count + 1) as u32;
+
             session.selected_mailbox = Some(MailboxSelection {
                 name: mailbox_name.clone(),
                 read_only,
-                message_count: 0,
-                recent_count: 0,
+                message_count,
+                recent_count,
                 uid_validity: 1,
-                uid_next: 1,
+                uid_next,
                 flags: vec!["\\Answered".to_string(), "\\Flagged".to_string(), "\\Deleted".to_string(), "\\Seen".to_string(), "\\Draft".to_string()],
             });
 
             let response = format!(
                 "* FLAGS (\\Answered \\Flagged \\Deleted \\Seen \\Draft)\r\n\
                  * OK [PERMANENTFLAGS (\\Answered \\Flagged \\Deleted \\Seen \\Draft \\*)] Flags permitted\r\n\
-                 * 0 EXISTS\r\n\
-                 * 0 RECENT\r\n\
+                 * {} EXISTS\r\n\
+                 * {} RECENT\r\n\
                  * OK [UIDVALIDITY 1] UIDs valid\r\n\
-                 * OK [UIDNEXT 1] Predicted next UID\r\n\
+                 * OK [UIDNEXT {}] Predicted next UID\r\n\
                  {} OK {} completed\r\n",
-                tag, if read_only { "EXAMINE" } else { "SELECT" }
+                message_count, recent_count, uid_next, tag, if read_only { "EXAMINE" } else { "SELECT" }
             );
 
             response
         }
         "SEARCH" => {
-            // For now, return empty search results
-            format!("* SEARCH\r\n{} OK SEARCH completed\r\n", tag)
+            // Get all emails from storage
+            let stored_emails = match storage.list_emails() {
+                Ok(emails) => emails,
+                Err(e) => {
+                    warn!("⚠️  Failed to list emails for SEARCH: {}", e);
+                    return format!("* SEARCH\r\n{} OK SEARCH completed\r\n", tag);
+                }
+            };
+
+            let mut matching_sequence_numbers = Vec::new();
+
+            // For now, implement basic search for ALL (returns all messages)
+            // TODO: Implement proper search criteria parsing (FROM, TO, SUBJECT, etc.)
+            for (index, stored_email) in stored_emails.iter().enumerate() {
+                let seq_num = (index + 1) as u32;
+
+                // Check if search criteria are provided, otherwise return all (implicit ALL)
+                if args.is_empty() || args.iter().any(|a| a.to_uppercase() == "ALL") {
+                    matching_sequence_numbers.push(seq_num);
+                } else {
+                    // Basic implementation: check if search criteria match any part of email
+                    let email_content = match storage.read_email(&stored_email.filename) {
+                        Ok(content) => content,
+                        Err(_) => continue,
+                    };
+
+                    let email = match crate::email::EmailMessage::parse(&email_content) {
+                        Ok(parsed) => parsed,
+                        Err(_) => continue,
+                    };
+
+                    let mut matches = false;
+                    for criteria in args.iter() {
+                        let criteria_upper = criteria.to_uppercase();
+
+                        match criteria_upper.as_str() {
+                            "ANSWERED" | "DELETED" | "FLAGGED" | "SEEN" | "DRAFT" | "RECENT" => {
+                                // Flag-based searches - would need proper flag storage
+                            }
+                            "NEW" => {
+                                // NEW = RECENT + not SEEN
+                                if !stored_email.is_read {
+                                    matches = true;
+                                }
+                            }
+                            "OLD" => {
+                                // OLD = not RECENT
+                                if stored_email.is_read {
+                                    matches = true;
+                                }
+                            }
+                            "UNSEEN" => {
+                                if !stored_email.is_read {
+                                    matches = true;
+                                }
+                            }
+                            _ => {
+                                // Try to match against email content
+                                let search_text = criteria.to_lowercase();
+                                let email_lower = email.raw.to_lowercase();
+
+                                if email_lower.contains(&search_text) {
+                                    matches = true;
+                                }
+                            }
+                        }
+
+                        if matches {
+                            break;
+                        }
+                    }
+
+                    if matches {
+                        matching_sequence_numbers.push(seq_num);
+                    }
+                }
+            }
+
+            // Format SEARCH response
+            let search_results = matching_sequence_numbers.iter()
+                .map(|n| n.to_string())
+                .collect::<Vec<_>>()
+                .join(" ");
+
+            format!("* SEARCH {}\r\n{} OK SEARCH completed\r\n", search_results, tag)
         }
         "FETCH" => {
             if args.is_empty() {
@@ -475,8 +595,170 @@ fn process_selected_state(
             }
 
             // Parse FETCH command: FETCH <seq-set> <data-item>
-            // For now, just return a basic response
-            format!("{} OK FETCH completed\r\n", tag)
+            let seq_set = args[0];
+            let data_items = if args.len() > 1 { &args[1..] } else { &[] };
+
+            debug!("📥 FETCH request: sequence set={}, data items={:?}", seq_set, data_items);
+
+            // Get stored emails to determine actual message counts
+            let stored_emails = match storage.list_emails() {
+                Ok(emails) => emails,
+                Err(e) => {
+                    warn!("⚠️  Failed to list emails for FETCH: {}", e);
+                    return format!("{} NO Failed to retrieve emails\r\n", tag);
+                }
+            };
+
+            // Parse sequence set and fetch requested emails
+            let mut response_lines = Vec::new();
+            let total_messages = stored_emails.len();
+
+            if total_messages == 0 {
+                return format!("{} OK FETCH completed\r\n", tag);
+            }
+
+            // Parse the sequence set (supports single numbers and ranges like 1:3)
+            let sequence_numbers = parse_sequence_set(seq_set, total_messages);
+            let sequence_count = sequence_numbers.len();
+
+            for seq_num in sequence_numbers {
+                if seq_num == 0 || seq_num > total_messages as u32 {
+                    response_lines.push(format!("{} BAD Invalid message sequence number {}\r\n", tag, seq_num));
+                    continue;
+                }
+
+                // Convert sequence number to array index (1-based to 0-based)
+                let email_index = (seq_num - 1) as usize;
+                let stored_email = &stored_emails[email_index];
+
+                // Read actual email content from storage
+                let email_content = match storage.read_email(&stored_email.filename) {
+                    Ok(content) => content.to_string(),
+                    Err(e) => {
+                        warn!("⚠️  Failed to read email {}: {}", stored_email.filename, e);
+                        continue;
+                    }
+                };
+
+                // Parse the email for structured data
+                let email = match crate::email::EmailMessage::parse(&email_content) {
+                    Ok(parsed) => parsed,
+                    Err(e) => {
+                        warn!("⚠️  Failed to parse email {}: {}", stored_email.filename, e);
+                        continue;
+                    }
+                };
+
+                // Process each data item requested
+                let mut fetch_data = Vec::new();
+                for item in data_items {
+                    let item_upper = item.to_uppercase();
+
+                    match item_upper.as_str() {
+                        "BODY" | "BODY[]" => {
+                            // Full email content
+                            let size = email.raw.len();
+                            fetch_data.push(format!("BODY[] {{{}}}\r\n{}", size, email.raw));
+                        }
+                        "BODY.PEEK[]" | "BODY.PEEK" => {
+                            // Full email content without setting Seen flag
+                            let size = email.raw.len();
+                            fetch_data.push(format!("BODY.PEEK[] {{{}}}\r\n{}", size, email.raw));
+                        }
+                        "RFC822" => {
+                            // Alias for BODY[]
+                            let size = email.raw.len();
+                            fetch_data.push(format!("RFC822 {{{}}}\r\n{}", size, email.raw));
+                        }
+                        "RFC822.HEADER" => {
+                            // Just headers
+                            let headers_end = email.raw.find("\r\n\r\n").unwrap_or(email.raw.len());
+                            let headers = &email.raw[..headers_end];
+                            let size = headers.len();
+                            fetch_data.push(format!("RFC822.HEADER {{{}}}\r\n{}", size, headers));
+                        }
+                        "RFC822.SIZE" => {
+                            fetch_data.push(format!("RFC822.SIZE {}", email.raw.len()));
+                        }
+                        "UID" => {
+                            fetch_data.push(format!("UID {}", seq_num));
+                        }
+                        "FLAGS" => {
+                            let flags = if stored_email.is_read {
+                                "\\Seen"
+                            } else {
+                                ""
+                            };
+                            fetch_data.push(format!("FLAGS ({})", flags));
+                        }
+                        "INTERNALDATE" => {
+                            let date_str = stored_email.modified_at.format("%d-%b-%Y %H:%M:%S %z");
+                            fetch_data.push(format!("INTERNALDATE \"{}\"", date_str));
+                        }
+                        "ENVELOPE" => {
+                            let envelope = format_envelope(&email);
+                            fetch_data.push(format!("ENVELOPE ({})", envelope));
+                        }
+                        "BODYSTRUCTURE" => {
+                            let body_struct = format_body_structure(&email);
+                            fetch_data.push(format!("BODYSTRUCTURE ({})", body_struct));
+                        }
+                        "ALL" => {
+                            // Macro for FLAGS, INTERNALDATE, RFC822.SIZE, ENVELOPE
+                            let flags = if stored_email.is_read { "\\Seen" } else { "" };
+                            let date_str = stored_email.modified_at.format("%d-%b-%Y %H:%M:%S %z");
+                            let envelope = format_envelope(&email);
+                            fetch_data.push(format!("FLAGS ({})", flags));
+                            fetch_data.push(format!("INTERNALDATE \"{}\"", date_str));
+                            fetch_data.push(format!("RFC822.SIZE {}", email.raw.len()));
+                            fetch_data.push(format!("ENVELOPE ({})", envelope));
+                        }
+                        "FULL" => {
+                            // Macro for FLAGS, INTERNALDATE, RFC822.SIZE, ENVELOPE, BODY
+                            let flags = if stored_email.is_read { "\\Seen" } else { "" };
+                            let date_str = stored_email.modified_at.format("%d-%b-%Y %H:%M:%S %z");
+                            let envelope = format_envelope(&email);
+                            let body_struct = format_body_structure(&email);
+                            fetch_data.push(format!("FLAGS ({})", flags));
+                            fetch_data.push(format!("INTERNALDATE \"{}\"", date_str));
+                            fetch_data.push(format!("RFC822.SIZE {}", email.raw.len()));
+                            fetch_data.push(format!("ENVELOPE ({})", envelope));
+                            fetch_data.push(format!("BODYSTRUCTURE ({})", body_struct));
+                        }
+                        "FAST" => {
+                            // Macro for FLAGS, INTERNALDATE, RFC822.SIZE
+                            let flags = if stored_email.is_read { "\\Seen" } else { "" };
+                            let date_str = stored_email.modified_at.format("%d-%b-%Y %H:%M:%S %z");
+                            fetch_data.push(format!("FLAGS ({})", flags));
+                            fetch_data.push(format!("INTERNALDATE \"{}\"", date_str));
+                            fetch_data.push(format!("RFC822.SIZE {}", email.raw.len()));
+                        }
+                        _ => {
+                            // Unknown data item - try to pass through
+                            fetch_data.push(format!("{}", item));
+                        }
+                    }
+                }
+
+                // Build the FETCH response line
+                let fetch_response = if fetch_data.is_empty() {
+                    format!("{} FETCH ({})\r\n", seq_num, data_items.join(" "))
+                } else {
+                    format!("{} FETCH ({})\r\n", seq_num, fetch_data.join(" "))
+                };
+
+                response_lines.push(fetch_response);
+            }
+
+            // Combine all response lines with the completion tag
+            let response = if response_lines.is_empty() {
+                format!("{} OK FETCH completed\r\n", tag)
+            } else {
+                format!("{}{} OK FETCH completed\r\n", response_lines.join(""), tag)
+            };
+
+            debug!("📤 FETCH response prepared for {} messages", sequence_count);
+            response
         }
         "STORE" => {
             if args.len() < 2 {
@@ -506,6 +788,101 @@ fn process_selected_state(
             format!("{} BAD Command not recognized in this state\r\n", tag)
         }
     }
+}
+
+/// Parse IMAP sequence set into individual sequence numbers
+fn parse_sequence_set(seq_set: &str, total_messages: usize) -> Vec<u32> {
+    let mut sequence_numbers = Vec::new();
+
+    // Split by commas for multiple ranges/numbers
+    for part in seq_set.split(',') {
+        let part = part.trim();
+
+        if part.contains(':') {
+            // Range like "1:3" or "3:1"
+            let range_parts: Vec<&str> = part.split(':').collect();
+            if range_parts.len() == 2 {
+                let start: u32 = range_parts[0].parse().unwrap_or(1);
+                let end: u32 = range_parts[1].parse().unwrap_or(total_messages as u32);
+
+                if start <= end {
+                    for seq in start..=end {
+                        if seq <= total_messages as u32 {
+                            sequence_numbers.push(seq);
+                        }
+                    }
+                } else {
+                    // Reverse range like "5:3"
+                    for seq in (end..=start).rev() {
+                        if seq <= total_messages as u32 {
+                            sequence_numbers.push(seq);
+                        }
+                    }
+                }
+            }
+        } else if part == "*" {
+            // Asterisk means last message
+            if total_messages > 0 {
+                sequence_numbers.push(total_messages as u32);
+            }
+        } else {
+            // Single number
+            if let Ok(seq) = part.parse::<u32>() {
+                if seq <= total_messages as u32 {
+                    sequence_numbers.push(seq);
+                }
+            }
+        }
+    }
+
+    sequence_numbers.sort();
+    sequence_numbers.dedup();
+    sequence_numbers
+}
+
+/// Format email envelope for IMAP response
+fn format_envelope(email: &crate::email::EmailMessage) -> String {
+    let from = email.headers.from.as_deref().unwrap_or("NIL");
+    let subject = email.headers.subject.as_deref().unwrap_or("NIL");
+    let date = email.headers.date
+        .map(|d| format!("\"{}\"", d.format("%d-%b-%Y %H:%M:%S %z")))
+        .unwrap_or("NIL".to_string());
+    let message_id = email.headers.message_id.as_deref().unwrap_or("NIL");
+
+    format!("{} {} {} {} {} {} {}",
+        date, message_id, from, format_address_list(&email.headers.to),
+        format_address_list(&email.headers.cc), "NIL", subject)
+}
+
+/// Format address list for IMAP response
+fn format_address_list(addresses: &[String]) -> String {
+    if addresses.is_empty() {
+        return "NIL".to_string();
+    }
+
+    let formatted: Vec<String> = addresses.iter().map(|addr| {
+        format!("((NIL NIL \"{}\" NIL))", addr.replace("\"", "\\\""))
+    }).collect();
+
+    formatted.join(" ")
+}
+
+/// Format body structure for IMAP response
+fn format_body_structure(email: &crate::email::EmailMessage) -> String {
+    let content_type = &email.body.content_type;
+    let content_type_parts: Vec<&str> = content_type.split('/').collect();
+    let main_type = content_type_parts.first().unwrap_or(&"text");
+    let sub_type = content_type_parts.get(1).unwrap_or(&"plain");
+    let charset = if content_type.contains("charset=") {
+        let charset_part = content_type.split("charset=").nth(1).unwrap_or("utf-8");
+        let charset = charset_part.split(';').next().unwrap_or("utf-8").trim();
+        format!("\"{}\"", charset)
+    } else {
+        "\"utf-8\"".to_string()
+    };
+
+    format!("\"{}\" {} NIL NIL NIL {} {} NIL NIL NIL",
+        main_type, sub_type, charset, email.raw.len())
 }
 
 /// Create authentication manager with user database
