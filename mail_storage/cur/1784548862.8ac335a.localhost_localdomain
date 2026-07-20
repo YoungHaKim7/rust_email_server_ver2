@@ -1,0 +1,4 @@
+Subject: SMTP Test Email
+
+This is a test email sent via SMTP protocol.
+It should be saved to the cur folder.

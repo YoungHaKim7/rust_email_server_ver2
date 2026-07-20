@@ -1,0 +1,25 @@
+# IMAP Telnet Test Commands
+# Connect with: telnet localhost 1143
+# Then use these commands in sequence:
+
+# Step 1: Login (use testuser/testpass)
+A1 LOGIN testuser testpass
+
+# Step 2: List available mailboxes
+A2 LIST "" *
+
+# Step 3: Select INBOX
+A3 SELECT INBOX
+
+# Step 4: Check for emails
+A4 SEARCH ALL
+
+# Step 5: Fetch first email
+A5 FETCH 1 RFC822
+
+# Step 6: Logout
+A6 LOGOUT
+
+# Note: The IMAP server uses IMAP protocol commands, not SMTP commands
+# SMTP commands like EHLO, MAIL FROM, etc. only work on port 8025 (SMTP)
+# IMAP commands like LOGIN, SELECT, FETCH work on port 1143 (IMAP)

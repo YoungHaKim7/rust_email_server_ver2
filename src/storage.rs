@@ -42,8 +42,30 @@ impl MaildirStorage {
         Ok(())
     }
 
-    /// Save an email to Maildir storage
+    /// Save an email to Maildir storage (directly to cur for piling up test emails)
     pub fn save_email(&self, email: &crate::email::EmailMessage) -> Result<String> {
+        // Generate unique filename
+        let filename = Self::generate_unique_filename();
+        let tmp_path = self.base_path.join("tmp").join(&filename);
+        let cur_path = self.base_path.join("cur").join(&filename);
+
+        // Write to tmp directory first (atomic operation)
+        fs::write(&tmp_path, email.raw.as_bytes())
+            .context("Failed to write email to tmp directory")?;
+
+        debug!("💾 Email written to tmp: {}", filename);
+
+        // Move from tmp to cur (piling up emails in cur directory)
+        fs::rename(&tmp_path, &cur_path)
+            .context("Failed to move email from tmp to cur")?;
+
+        info!("📧 Email saved to maildir/cur/{}", filename);
+
+        Ok(filename)
+    }
+
+    /// Save an email to Maildir storage (specifically to new folder)
+    pub fn save_email_to_new(&self, email: &crate::email::EmailMessage) -> Result<String> {
         // Generate unique filename
         let filename = Self::generate_unique_filename();
         let tmp_path = self.base_path.join("tmp").join(&filename);
@@ -55,7 +77,7 @@ impl MaildirStorage {
 
         debug!("💾 Email written to tmp: {}", filename);
 
-        // Move from tmp to new (safe for other processes to read)
+        // Move from tmp to new (standard Maildir behavior for new emails)
         fs::rename(&tmp_path, &new_path)
             .context("Failed to move email from tmp to new")?;
 

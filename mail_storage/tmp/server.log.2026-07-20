@@ -50,3 +50,205 @@
 2026-07-20T11:49:07.825737Z  INFO rust_email_server_ver2::connection:   Active Connections: 1
 2026-07-20T11:49:07.825758Z  INFO rust_email_server_ver2::connection:   Total Messages: 1
 2026-07-20T11:49:07.825777Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T11:50:07.826117Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T11:50:07.826184Z  INFO rust_email_server_ver2::connection:   Total Connections: 1
+2026-07-20T11:50:07.826208Z  INFO rust_email_server_ver2::connection:   Active Connections: 1
+2026-07-20T11:50:07.826226Z  INFO rust_email_server_ver2::connection:   Total Messages: 1
+2026-07-20T11:50:07.826243Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T11:50:20.113342Z  INFO rust_email_server_ver2: 🚀 Rust Email Server starting...
+2026-07-20T11:50:20.113358Z  INFO rust_email_server_ver2: 📊 Logging level: info
+2026-07-20T11:50:20.113365Z  INFO rust_email_server_ver2: 📝 Configuration loaded successfully
+2026-07-20T11:50:20.113401Z  INFO rust_email_server_ver2: 🔧 Loaded server configuration
+2026-07-20T11:50:20.113419Z  INFO rust_email_server_ver2::tls: 🔐 Loading TLS configuration
+2026-07-20T11:50:20.113425Z  INFO rust_email_server_ver2::tls:   Certificate: certs/server.crt
+2026-07-20T11:50:20.113431Z  INFO rust_email_server_ver2::imap: 🚀 Starting IMAP server...
+2026-07-20T11:50:20.113432Z  INFO rust_email_server_ver2::tls:   Private Key: certs/server.key
+2026-07-20T11:50:20.113453Z  INFO rust_email_server_ver2::storage: 📁 Maildir storage initialized at: mail_storage
+2026-07-20T11:50:20.113454Z  WARN rust_email_server_ver2: ⚠️  Failed to load TLS configuration: Failed to open certificate file: certs/server.crt
+2026-07-20T11:50:20.113462Z  WARN rust_email_server_ver2: 📧 Server will run with STARTTLS command but no actual TLS
+2026-07-20T11:50:20.113464Z  INFO rust_email_server_ver2::imap: 💾 IMAP: Email storage enabled at: mail_storage
+2026-07-20T11:50:20.113473Z  INFO rust_email_server_ver2::storage: 📁 Maildir storage initialized at: mail_storage
+2026-07-20T11:50:20.113482Z  INFO rust_email_server_ver2: 💾 Email storage enabled at: mail_storage
+2026-07-20T11:51:33.000957Z  INFO rust_email_server_ver2: 🚀 Rust Email Server starting...
+2026-07-20T11:51:33.001037Z  INFO rust_email_server_ver2: 📊 Logging level: info
+2026-07-20T11:51:33.001041Z  INFO rust_email_server_ver2: 📝 Configuration loaded successfully
+2026-07-20T11:51:33.001093Z  INFO rust_email_server_ver2: 🔧 Loaded server configuration
+2026-07-20T11:51:33.001110Z  INFO rust_email_server_ver2::tls: 🔐 Loading TLS configuration
+2026-07-20T11:51:33.001117Z  INFO rust_email_server_ver2::tls:   Certificate: certs/server.crt
+2026-07-20T11:51:33.001122Z  INFO rust_email_server_ver2::tls:   Private Key: certs/server.key
+2026-07-20T11:51:33.001127Z  INFO rust_email_server_ver2::imap: 🚀 Starting IMAP server...
+2026-07-20T11:51:33.001141Z  WARN rust_email_server_ver2: ⚠️  Failed to load TLS configuration: Failed to open certificate file: certs/server.crt
+2026-07-20T11:51:33.001148Z  WARN rust_email_server_ver2: 📧 Server will run with STARTTLS command but no actual TLS
+2026-07-20T11:51:33.001150Z  INFO rust_email_server_ver2::storage: 📁 Maildir storage initialized at: mail_storage
+2026-07-20T11:51:33.001162Z  INFO rust_email_server_ver2::storage: 📁 Maildir storage initialized at: mail_storage
+2026-07-20T11:51:33.001169Z  INFO rust_email_server_ver2::imap: 💾 IMAP: Email storage enabled at: mail_storage
+2026-07-20T11:51:33.001172Z  INFO rust_email_server_ver2: 💾 Email storage enabled at: mail_storage
+2026-07-20T11:51:33.001329Z  INFO rust_email_server_ver2: 🚀 SMTP server listening on 127.0.0.1:8025
+2026-07-20T11:51:33.001333Z  INFO rust_email_server_ver2::imap: 🚀 IMAP server listening on 127.0.0.1:1143
+2026-07-20T11:51:33.001337Z  INFO rust_email_server_ver2: 📊 Configuration:
+2026-07-20T11:51:33.001342Z  INFO rust_email_server_ver2:   Max connections: 100
+2026-07-20T11:51:33.001348Z  INFO rust_email_server_ver2:   Max message size: 10 MB
+2026-07-20T11:51:33.001354Z  INFO rust_email_server_ver2:   Connection timeout: 300s
+2026-07-20T11:51:33.001360Z  INFO rust_email_server_ver2:   TLS: Enabled (STARTTLS support available)
+2026-07-20T11:51:33.002492Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T11:51:33.002501Z  INFO rust_email_server_ver2::connection:   Total Connections: 0
+2026-07-20T11:51:33.002507Z  INFO rust_email_server_ver2::connection:   Active Connections: 0
+2026-07-20T11:51:33.002511Z  INFO rust_email_server_ver2::connection:   Total Messages: 0
+2026-07-20T11:51:33.002515Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T11:52:27.278367Z  INFO rust_email_server_ver2: 🚀 Rust Email Server starting...
+2026-07-20T11:52:27.278381Z  INFO rust_email_server_ver2: 📊 Logging level: info
+2026-07-20T11:52:27.278386Z  INFO rust_email_server_ver2: 📝 Configuration loaded successfully
+2026-07-20T11:52:27.278405Z  INFO rust_email_server_ver2::imap: 🚀 Starting IMAP server...
+2026-07-20T11:52:27.278408Z  INFO rust_email_server_ver2: 🔧 Loaded server configuration
+2026-07-20T11:52:27.278421Z  INFO rust_email_server_ver2::storage: 📁 Maildir storage initialized at: mail_storage
+2026-07-20T11:52:27.278424Z  INFO rust_email_server_ver2::tls: 🔐 Loading TLS configuration
+2026-07-20T11:52:27.278427Z  INFO rust_email_server_ver2::imap: 💾 IMAP: Email storage enabled at: mail_storage
+2026-07-20T11:52:27.278429Z  INFO rust_email_server_ver2::tls:   Certificate: certs/server.crt
+2026-07-20T11:52:27.278432Z  INFO rust_email_server_ver2::tls:   Private Key: certs/server.key
+2026-07-20T11:52:27.278491Z  INFO rust_email_server_ver2::imap: 🚀 IMAP server listening on 127.0.0.1:1143
+2026-07-20T11:52:27.278602Z  INFO rust_email_server_ver2::tls: ✅ TLS configuration created successfully
+2026-07-20T11:52:27.278606Z  INFO rust_email_server_ver2: 🔐 TLS configuration loaded successfully
+2026-07-20T11:52:27.278614Z  INFO rust_email_server_ver2::storage: 📁 Maildir storage initialized at: mail_storage
+2026-07-20T11:52:27.278618Z  INFO rust_email_server_ver2: 💾 Email storage enabled at: mail_storage
+2026-07-20T11:52:27.278635Z  INFO rust_email_server_ver2: 🚀 SMTP server listening on 127.0.0.1:8025
+2026-07-20T11:52:27.278638Z  INFO rust_email_server_ver2: 📊 Configuration:
+2026-07-20T11:52:27.278640Z  INFO rust_email_server_ver2:   Max connections: 100
+2026-07-20T11:52:27.278643Z  INFO rust_email_server_ver2:   Max message size: 10 MB
+2026-07-20T11:52:27.278645Z  INFO rust_email_server_ver2:   Connection timeout: 300s
+2026-07-20T11:52:27.278647Z  INFO rust_email_server_ver2:   TLS: Enabled (STARTTLS support available)
+2026-07-20T11:52:27.279714Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T11:52:27.279722Z  INFO rust_email_server_ver2::connection:   Total Connections: 0
+2026-07-20T11:52:27.279725Z  INFO rust_email_server_ver2::connection:   Active Connections: 0
+2026-07-20T11:52:27.279727Z  INFO rust_email_server_ver2::connection:   Total Messages: 0
+2026-07-20T11:52:27.279730Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T11:53:27.280019Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T11:53:27.280067Z  INFO rust_email_server_ver2::connection:   Total Connections: 0
+2026-07-20T11:53:27.280086Z  INFO rust_email_server_ver2::connection:   Active Connections: 0
+2026-07-20T11:53:27.280097Z  INFO rust_email_server_ver2::connection:   Total Messages: 0
+2026-07-20T11:53:27.280109Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T11:54:27.280527Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T11:54:27.280573Z  INFO rust_email_server_ver2::connection:   Total Connections: 0
+2026-07-20T11:54:27.280590Z  INFO rust_email_server_ver2::connection:   Active Connections: 0
+2026-07-20T11:54:27.280601Z  INFO rust_email_server_ver2::connection:   Total Messages: 0
+2026-07-20T11:54:27.280612Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T11:55:27.280418Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T11:55:27.280473Z  INFO rust_email_server_ver2::connection:   Total Connections: 0
+2026-07-20T11:55:27.280490Z  INFO rust_email_server_ver2::connection:   Active Connections: 0
+2026-07-20T11:55:27.280502Z  INFO rust_email_server_ver2::connection:   Total Messages: 0
+2026-07-20T11:55:27.280513Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T11:56:27.280601Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T11:56:27.280620Z  INFO rust_email_server_ver2::connection:   Total Connections: 0
+2026-07-20T11:56:27.280623Z  INFO rust_email_server_ver2::connection:   Active Connections: 0
+2026-07-20T11:56:27.280626Z  INFO rust_email_server_ver2::connection:   Total Messages: 0
+2026-07-20T11:56:27.280628Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T11:57:20.949394Z  INFO rust_email_server_ver2: 🚀 Rust Email Server starting...
+2026-07-20T11:57:20.949410Z  INFO rust_email_server_ver2: 📊 Logging level: info
+2026-07-20T11:57:20.949414Z  INFO rust_email_server_ver2: 📝 Configuration loaded successfully
+2026-07-20T11:57:20.949440Z  INFO rust_email_server_ver2: 🔧 Loaded server configuration
+2026-07-20T11:57:20.949445Z  INFO rust_email_server_ver2::imap: 🚀 Starting IMAP server...
+2026-07-20T11:57:20.949462Z  INFO rust_email_server_ver2::tls: 🔐 Loading TLS configuration
+2026-07-20T11:57:20.949469Z  INFO rust_email_server_ver2::tls:   Certificate: certs/server.crt
+2026-07-20T11:57:20.949475Z  INFO rust_email_server_ver2::storage: 📁 Maildir storage initialized at: mail_storage
+2026-07-20T11:57:20.949476Z  INFO rust_email_server_ver2::tls:   Private Key: certs/server.key
+2026-07-20T11:57:20.949487Z  INFO rust_email_server_ver2::imap: 💾 IMAP: Email storage enabled at: mail_storage
+2026-07-20T11:57:20.949564Z  INFO rust_email_server_ver2::imap: 🚀 IMAP server listening on 127.0.0.1:1143
+2026-07-20T11:57:20.949784Z  INFO rust_email_server_ver2::tls: ✅ TLS configuration created successfully
+2026-07-20T11:57:20.949795Z  INFO rust_email_server_ver2: 🔐 TLS configuration loaded successfully
+2026-07-20T11:57:20.949808Z  INFO rust_email_server_ver2::storage: 📁 Maildir storage initialized at: mail_storage
+2026-07-20T11:57:20.949818Z  INFO rust_email_server_ver2: 💾 Email storage enabled at: mail_storage
+2026-07-20T11:57:20.949846Z  INFO rust_email_server_ver2: 🚀 SMTP server listening on 127.0.0.1:8025
+2026-07-20T11:57:20.949853Z  INFO rust_email_server_ver2: 📊 Configuration:
+2026-07-20T11:57:20.949858Z  INFO rust_email_server_ver2:   Max connections: 100
+2026-07-20T11:57:20.949863Z  INFO rust_email_server_ver2:   Max message size: 10 MB
+2026-07-20T11:57:20.949868Z  INFO rust_email_server_ver2:   Connection timeout: 300s
+2026-07-20T11:57:20.949874Z  INFO rust_email_server_ver2:   TLS: Enabled (STARTTLS support available)
+2026-07-20T11:57:20.950952Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T11:57:20.950965Z  INFO rust_email_server_ver2::connection:   Total Connections: 0
+2026-07-20T11:57:20.950975Z  INFO rust_email_server_ver2::connection:   Active Connections: 0
+2026-07-20T11:57:20.950987Z  INFO rust_email_server_ver2::connection:   Total Messages: 0
+2026-07-20T11:57:20.950992Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T11:57:40.383950Z  INFO rust_email_server_ver2: 📨 Accepted connection from 127.0.0.1:46924 (active: 1)
+2026-07-20T11:57:40.383990Z  INFO rust_email_server_ver2: 📨 New SMTP session from 127.0.0.1:46924
+2026-07-20T11:57:40.384079Z  INFO rust_email_server_ver2: 📧 Email received from 127.0.0.1:46924:
+2026-07-20T11:57:40.384088Z  INFO rust_email_server_ver2:   From: Some("admin@company.com")
+2026-07-20T11:57:40.384097Z  INFO rust_email_server_ver2:   To: ["team@company.com"]
+2026-07-20T11:57:40.384104Z  INFO rust_email_server_ver2:   Body: 19 lines
+2026-07-20T11:57:40.384109Z  INFO rust_email_server_ver2:   Size: 539 bytes
+2026-07-20T11:57:40.384119Z  INFO rust_email_server_ver2: ✅ Email parsed successfully:
+2026-07-20T11:57:40.384129Z  INFO rust_email_server_ver2:   📋 Summary: From: Some("admin@company.com") | To: ["team@company.com"] | Subject: Some("Project Update") | Size: 449 bytes | Type: text/plain
+2026-07-20T11:57:40.384138Z  INFO rust_email_server_ver2:   📝 Body Preview: Dear Team,
+
+We've successfully completed Phase 3 of our Rust
+handling for headers/body separation...
+2026-07-20T11:57:40.384275Z  INFO rust_email_server_ver2::storage: 📧 Email saved to maildir/cur/1784548660.4709d4f8.localhost_localdomain
+2026-07-20T11:57:40.384283Z  INFO rust_email_server_ver2: 💾 Email saved to storage: 1784548660.4709d4f8.localhost_localdomain
+2026-07-20T11:57:40.384310Z  INFO rust_email_server_ver2: ✅ Session with 127.0.0.1:46924 completed successfully
+2026-07-20T11:57:40.384354Z  INFO rust_email_server_ver2: 📭 Connection 127.0.0.1:46924 closed after 359.153µs
+2026-07-20T11:58:09.464632Z  INFO rust_email_server_ver2::imap: 📨 IMAP: Accepted connection from 127.0.0.1:39438 (active: 1)
+2026-07-20T11:58:09.464738Z  INFO rust_email_server_ver2::imap: 📨 New IMAP session from 127.0.0.1:39438
+2026-07-20T11:58:20.951801Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T11:58:20.951855Z  INFO rust_email_server_ver2::connection:   Total Connections: 1
+2026-07-20T11:58:20.951869Z  INFO rust_email_server_ver2::connection:   Active Connections: 1
+2026-07-20T11:58:20.951880Z  INFO rust_email_server_ver2::connection:   Total Messages: 1
+2026-07-20T11:58:20.951891Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T11:58:22.396911Z  WARN rust_email_server_ver2::imap: ❌ Invalid command in NotAuthenticated state: FINALTEST.COM
+2026-07-20T11:58:22.397071Z  WARN rust_email_server_ver2::imap: ❌ Invalid command in NotAuthenticated state: FROM:<ADMIN@COMPANY.COM>
+2026-07-20T11:58:22.397166Z  WARN rust_email_server_ver2::imap: ❌ Invalid command in NotAuthenticated state: TO:<TEAM@COMPANY.COM>
+2026-07-20T11:59:20.951526Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T11:59:20.951604Z  INFO rust_email_server_ver2::connection:   Total Connections: 1
+2026-07-20T11:59:20.951629Z  INFO rust_email_server_ver2::connection:   Active Connections: 1
+2026-07-20T11:59:20.951649Z  INFO rust_email_server_ver2::connection:   Total Messages: 1
+2026-07-20T11:59:20.951667Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T12:00:37.594281Z  INFO rust_email_server_ver2: 🚀 Rust Email Server starting...
+2026-07-20T12:00:37.594304Z  INFO rust_email_server_ver2: 📊 Logging level: info
+2026-07-20T12:00:37.594309Z  INFO rust_email_server_ver2: 📝 Configuration loaded successfully
+2026-07-20T12:00:37.594369Z  INFO rust_email_server_ver2: 🔧 Loaded server configuration
+2026-07-20T12:00:37.594376Z  INFO rust_email_server_ver2::imap: 🚀 Starting IMAP server...
+2026-07-20T12:00:37.594383Z  INFO rust_email_server_ver2::tls: 🔐 Loading TLS configuration
+2026-07-20T12:00:37.594391Z  INFO rust_email_server_ver2::tls:   Certificate: certs/server.crt
+2026-07-20T12:00:37.594397Z  INFO rust_email_server_ver2::tls:   Private Key: certs/server.key
+2026-07-20T12:00:37.594402Z  INFO rust_email_server_ver2::storage: 📁 Maildir storage initialized at: mail_storage
+2026-07-20T12:00:37.594417Z  INFO rust_email_server_ver2::imap: 💾 IMAP: Email storage enabled at: mail_storage
+2026-07-20T12:00:37.594462Z  INFO rust_email_server_ver2::imap: 🚀 IMAP server listening on 127.0.0.1:1143
+2026-07-20T12:00:37.594573Z  INFO rust_email_server_ver2::tls: ✅ TLS configuration created successfully
+2026-07-20T12:00:37.594578Z  INFO rust_email_server_ver2: 🔐 TLS configuration loaded successfully
+2026-07-20T12:00:37.594586Z  INFO rust_email_server_ver2::storage: 📁 Maildir storage initialized at: mail_storage
+2026-07-20T12:00:37.594590Z  INFO rust_email_server_ver2: 💾 Email storage enabled at: mail_storage
+2026-07-20T12:00:37.594611Z  INFO rust_email_server_ver2: 🚀 SMTP server listening on 127.0.0.1:8025
+2026-07-20T12:00:37.594613Z  INFO rust_email_server_ver2: 📊 Configuration:
+2026-07-20T12:00:37.594615Z  INFO rust_email_server_ver2:   Max connections: 100
+2026-07-20T12:00:37.594617Z  INFO rust_email_server_ver2:   Max message size: 10 MB
+2026-07-20T12:00:37.594620Z  INFO rust_email_server_ver2:   Connection timeout: 300s
+2026-07-20T12:00:37.594622Z  INFO rust_email_server_ver2:   TLS: Enabled (STARTTLS support available)
+2026-07-20T12:00:37.594645Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T12:00:37.594658Z  INFO rust_email_server_ver2::connection:   Total Connections: 0
+2026-07-20T12:00:37.594664Z  INFO rust_email_server_ver2::connection:   Active Connections: 0
+2026-07-20T12:00:37.594669Z  INFO rust_email_server_ver2::connection:   Total Messages: 0
+2026-07-20T12:00:37.594673Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
+2026-07-20T12:01:02.453916Z  INFO rust_email_server_ver2: 📨 Accepted connection from 127.0.0.1:43432 (active: 1)
+2026-07-20T12:01:02.453960Z  INFO rust_email_server_ver2: 📨 New SMTP session from 127.0.0.1:43432
+2026-07-20T12:01:02.454083Z  INFO rust_email_server_ver2: 📧 Email received from 127.0.0.1:43432:
+2026-07-20T12:01:02.454092Z  INFO rust_email_server_ver2:   From: Some("test@example.com")
+2026-07-20T12:01:02.454105Z  INFO rust_email_server_ver2:   To: ["recipient@example.com"]
+2026-07-20T12:01:02.454111Z  INFO rust_email_server_ver2:   Body: 4 lines
+2026-07-20T12:01:02.454117Z  INFO rust_email_server_ver2:   Size: 206 bytes
+2026-07-20T12:01:02.454134Z  INFO rust_email_server_ver2: ✅ Email parsed successfully:
+2026-07-20T12:01:02.454143Z  INFO rust_email_server_ver2:   📋 Summary: From: Some("test@example.com") | To: ["recipient@example.com"] | Subject: Some("SMTP Test Email") | Size: 111 bytes | Type: text/plain
+2026-07-20T12:01:02.454152Z  INFO rust_email_server_ver2:   📝 Body Preview: This is a test email sent via SMTP protocol.
+It should be saved to the cur folder.
+2026-07-20T12:01:02.454358Z  INFO rust_email_server_ver2::storage: 📧 Email saved to maildir/cur/1784548862.8ac335a.localhost_localdomain
+2026-07-20T12:01:02.454366Z  INFO rust_email_server_ver2: 💾 Email saved to storage: 1784548862.8ac335a.localhost_localdomain
+2026-07-20T12:01:02.454394Z  INFO rust_email_server_ver2: ✅ Session with 127.0.0.1:43432 completed successfully
+2026-07-20T12:01:02.454417Z  INFO rust_email_server_ver2: 📭 Connection 127.0.0.1:43432 closed after 457.198µs
+2026-07-20T12:01:16.284246Z  INFO rust_email_server_ver2::imap: 📨 IMAP: Accepted connection from 127.0.0.1:50126 (active: 1)
+2026-07-20T12:01:16.284280Z  INFO rust_email_server_ver2::imap: 📨 New IMAP session from 127.0.0.1:50126
+2026-07-20T12:01:16.284344Z  INFO rust_email_server_ver2::auth: 🔐 Authentication manager created
+2026-07-20T12:01:16.284351Z  INFO rust_email_server_ver2::imap: ✅ User testuser authenticated via IMAP LOGIN
+2026-07-20T12:01:18.284588Z  INFO rust_email_server_ver2::imap: 📁 User testuser selecting mailbox 'INBOX' (read-only: false)
+2026-07-20T12:01:20.290617Z  INFO rust_email_server_ver2::imap: ✅ Session with 127.0.0.1:50126 completed successfully
+2026-07-20T12:01:20.290735Z  INFO rust_email_server_ver2::imap: 📭 IMAP connection 127.0.0.1:50126 closed after 4.006443151s
+2026-07-20T12:01:37.595291Z  INFO rust_email_server_ver2::connection: 📊 Server Statistics:
+2026-07-20T12:01:37.595309Z  INFO rust_email_server_ver2::connection:   Total Connections: 1
+2026-07-20T12:01:37.595312Z  INFO rust_email_server_ver2::connection:   Active Connections: 1
+2026-07-20T12:01:37.595313Z  INFO rust_email_server_ver2::connection:   Total Messages: 1
+2026-07-20T12:01:37.595315Z  INFO rust_email_server_ver2::connection:   Rejected Connections: 0
