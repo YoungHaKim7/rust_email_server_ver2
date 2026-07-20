@@ -690,11 +690,6 @@ fn extract_email(command: &str) -> Option<String> {
 
 /// Start the enhanced SMTP server with connection management and TLS support
 pub async fn start_smtp_server() -> Result<()> {
-    // Initialize logging
-    tracing_subscriber::fmt()
-        .with_env_filter("rust_email_server=debug,tokio=info")
-        .init();
-
     // Load configuration
     let config = ServerConfig::load()?;
     info!("🔧 Loaded server configuration");

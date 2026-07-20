@@ -508,3 +508,63 @@ pkill -f rust_email_server 2>/dev/null
    pkill -f rust_email_server
    Simplest IMAP test
 ```
+
+# Server log 저장하기 굿
+
+## ✅ Fixed! Server logs are now being recorded in the `mail_storage/tmp` directory!
+
+### 🔧 What was wrong:
+
+The server had tracing instrumentation throughout the codebase using `tracing::info!`, `debug!`, `warn!`, etc., but:
+1. **Duplicate logging initialization** - `main.rs` AND `lib.rs` were both trying to initialize the tracing subscriber, causing a panic
+2. **No file output** - Logs were only going to the console, not to files
+
+### 🎯 What I fixed:
+
+1. **Added `tracing-appender` dependency** to support file logging
+2. **Configured daily log rotation** in `mail_storage/tmp/server.log.YYYY-MM-DD` format
+3. **Removed duplicate logging initialization** from `lib.rs`
+4. **Set up dual output** - logs now go to both console AND file simultaneously
+
+### 📂 Current log file structure:
+
+```bash
+mail_storage/tmp/server.log.2026-07-20  # Today's logs
+```
+
+### 📝 Sample log entries:
+
+```
+2026-07-20T11:48:07.825052Z  INFO rust_email_server_ver2: 🚀 SMTP server listening on 127.0.0.1:8025
+2026-07-20T11:48:24.188511Z  INFO rust_email_server_ver2::storage: 📧 Email saved to maildir/new/1784548104.d7c3f605.localhost_localdomain
+2026-07-20T11:48:24.188583Z  INFO rust_email_server_ver2: 📭 Connection 127.0.0.1:42414 closed after 384.662µs
+```
+
+### 🎉 Results:
+
+- ✅ **Logs are now written to files** in `mail_storage/tmp/`
+- ✅ **Daily log rotation** - new file created each day automatically  
+- ✅ **No ANSI codes in files** - clean log format for easy parsing
+- ✅ **Console output still works** - you can see logs in real-time
+- ✅ **All server activity logged** - SMTP, IMAP, authentication, email storage
+
+### 📊 How to view the logs:
+
+```bash
+# View today's server logs
+cat mail_storage/tmp/server.log.2026-07-20
+
+# Monitor logs in real-time (watch for new entries)
+tail -f mail_storage/tmp/server.log.2026-07-20
+
+# Check latest log entries
+tail -20 mail_storage/tmp/server.log.2026-07-20
+
+# Search for specific events
+grep "ERROR\|WARN" mail_storage/tmp/server.log.*
+
+# Count email processing stats
+grep "Email saved" mail_storage/tmp/server.log.* | wc -l
+```
+
+Your email server now has comprehensive logging with file-based recording for debugging and monitoring! 🎉

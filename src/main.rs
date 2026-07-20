@@ -1,6 +1,8 @@
 use anyhow::Result;
 use rust_email_server_ver2::config::ServerConfig;
 use rust_email_server_ver2::{start_imap_server, start_smtp_server};
+use tracing_subscriber::{EnvFilter, fmt, prelude::*};
+use tracing_appender::rolling;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -10,6 +12,33 @@ async fn main() -> Result<()> {
 
     // Load configuration
     let config = ServerConfig::load()?;
+
+    // Initialize tracing subscriber for logging
+    let log_level = &config.logging.level;
+    let env_filter = EnvFilter::try_from_default_env()
+        .unwrap_or_else(|_| EnvFilter::new(log_level));
+
+    // Create log directory in mail_storage/tmp
+    let log_path = "mail_storage/tmp";
+    let file_appender = rolling::daily(log_path, "server.log");
+
+    // Initialize logging with both console and file output
+    tracing_subscriber::registry()
+        .with(env_filter)
+        .with(
+            fmt::layer()
+                .with_writer(std::io::stdout)
+        )
+        .with(
+            fmt::layer()
+                .with_writer(file_appender)
+                .with_ansi(false) // Disable ANSI colors in log files
+        )
+        .init();
+
+    tracing::info!("🚀 Rust Email Server starting...");
+    tracing::info!("📊 Logging level: {}", log_level);
+    tracing::info!("📝 Configuration loaded successfully");
 
     // Start both SMTP and IMAP servers concurrently
     let imap_config = config.clone();

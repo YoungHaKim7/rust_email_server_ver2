@@ -160,3 +160,47 @@ echo -e "A1 LOGIN testuser testpass\r\nA2 SELECT INBOX\r\nA3 SEARCH ALL\r\nA4 FE
 ```
 
 Your email storage system is now fully functional! 🎉
+
+# server log기록
+
+- Perfect! ✅ **Fixed successfully!**
+
+## What was wrong:
+
+Your server had logging instrumentation throughout the codebase using `tracing::info!`, `debug!`, `warn!`, etc., but the **tracing subscriber was never initialized**. This meant all those log calls were silently doing nothing - like having a printer without turning it on.
+
+## What I fixed:
+
+I added tracing subscriber initialization to `main.rs` that:
+- ✅ Reads the log level from your config (`"info"` by default)
+- ✅ Respects the `RUST_LOG` environment variable if set
+- ✅ Sets up formatted output to console
+- ✅ Actually makes your logging work!
+
+## Now your logs will appear:
+
+The server already has logging calls in places like:
+- Authentication attempts (`auth.rs`)
+- Email parsing (`email.rs`) 
+- Connection management (`connection.rs`)
+- Server operations
+
+These will now actually output logs when the server runs.
+
+## To run with different log levels:
+
+```bash
+# Default (info level)
+cargo run
+
+# Debug level (more verbose)
+RUST_LOG=debug cargo run
+
+# Trace level (maximum verbosity)
+RUST_LOG=trace cargo run
+
+# Only show errors
+RUST_LOG=error cargo run
+```
+
+Your logging is now properly configured and ready to use! 🎉
